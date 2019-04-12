@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ClooN</name>
+    </assembly>
+    <members>
+        <member name="T:ClooN.NoiseModule">
+            <summary>
+            Basic NoiseModule class
+            </summary>
+        </member>
+        <member name="P:ClooN.NoiseModule.Code">
+            <summary>
+            Contains the stub code for the OpenCL program
+            </summary>
+        </member>
+        <member name="T:ClooN.ImplicitCube">
+            <summary>
+            Represents an implicit cube of points
+            </summary>
+        </member>
+        <member name="M:ClooN.ImplicitCube.#ctor(System.Single,System.Single,System.Int32,System.Single,System.Single,System.Int32,System.Single,System.Single,System.Int32)">
+            <summary>
+            Initializes a implicit cube
+            </summary>        
+        </member>
+        <member name="P:ClooN.ImplicitCube.ValueCount">
+            <summary>
+            The number of values the cube represents
+            </summary>
+        </member>
+        <member name="T:ClooN.Noise">
+            <summary>
+            Utility Class for Noise compositions
+            </summary>
+        </member>
+        <member name="M:ClooN.Noise.FractalBrownianMotion(System.Int32,ClooN.NoiseModule,ClooN.NoiseModule,ClooN.NoiseModule)">
+            <summary>
+            Generates cloud style noise on multiple octaves. Single octaves create white noise looks.
+            </summary>
+            <param name="octaves">Number of layers</param>
+            <param name="frequency">The scale of the noise</param>
+            <param name="lacunarity">Multiplier for frequency for each octave</param>
+            <param name="persistence">Multiplier for amplitude (value-range) for each octave</param>
+            <returns>NoiseModule</returns>
+        </member>
+        <member name="M:ClooN.Noise.RidgedMultifractal(System.Int32,ClooN.NoiseModule,ClooN.NoiseModule,ClooN.NoiseModule,ClooN.NoiseModule)">
+            <summary>
+            Generates a dune style fractal. Multiple layers become like hard edge mountains.
+            </summary>
+            <param name="octaves">>Number of layers</param>
+            <param name="frequency">The scale of the noise</param>
+            <param name="lacunarity">Multiplier for frequency for each octave</param>
+            <param name="persistence">Multiplier for amplitude (value-range) for each octave</param>
+            <param name="offset">Desired offset as float or another module</param>
+            <returns>NoiseModule</returns>
+        </member>
+        <member name="M:ClooN.Noise.Turbulence(System.Int32,ClooN.NoiseModule,ClooN.NoiseModule,ClooN.NoiseModule)">
+            <summary>
+            Generates tapeworm looking noise. Multiple layers shift, scale and blend additional tapeworms.
+            </summary>
+            <param name="octaves">>Number of layers</param>
+            <param name="frequency">The scale of the noise</param>
+            <param name="lacunarity">Desired lacunarity as float or another module</param>
+            <param name="persistence">Desired gain as float or another module</param>
+            <returns>NoiseModule</returns>
+        </member>
+        <member name="M:ClooN.Noise.Voronoi(ClooN.NoiseModule,ClooN.VoronoiType)">
+            <summary>
+            Generates a mosaic pattern
+            </summary>
+            <param name="frequency">The scale of the noise</param>
+            <param name="type">Type of Voronoi</param>
+            <returns>NoiseModule</returns>
+        </member>
+        <member name="M:ClooN.Noise.Abs(ClooN.NoiseModule)">
+            <summary>
+            Absolute value
+            </summary>
+            <param name="module">noisemodule</param>
+            <returns>Absolute value</returns>
+        </member>
+        <member name="M:ClooN.Noise.Lerp(ClooN.NoiseModule,ClooN.NoiseModule,ClooN.NoiseModule)">
+            <summary>
+            Linear blend
+            </summary>
+            <param name="min">Minimum value as float or another module</param>
+            <param name="max">Maximum value as float or another module</param>
+            <param name="interpoliant"></param>
+            <returns>Linear blend</returns>
+        </member>
+        <member name="M:ClooN.Noise.Min(ClooN.NoiseModule,ClooN.NoiseModule)">
+            <summary>
+            Minimum of two
+            </summary>
+            <param name="module1">First Module</param>
+            <param name="module2">Second Module</param>
+            <returns>Minimum Module</returns>
+        </member>
+        <member name="M:ClooN.Noise.Max(ClooN.NoiseModule,ClooN.NoiseModule)">
+            <summary>
+            Maximum of two
+            </summary>
+            <param name="module1">First Module</param>
+            <param name="module2">Second Module</param>
+            <returns>Maximum Module</returns>
+        </member>
+        <member name="M:ClooN.Noise.Power(ClooN.NoiseModule,ClooN.NoiseModule)">
+            <summary>
+            Compute basis to the power of exponent
+            </summary>
+            <param name="basis">Basis Module</param>
+            <param name="exponent">Exponent Module</param>
+            <returns>Exponential Module</returns>
+        </member>
+        <member name="M:ClooN.Noise.Round(ClooN.NoiseModule)">
+            <summary>
+            Integral value nearest to module rounding
+            </summary>
+            <param name="module">Module to round up</param>
+            <returns>Rounded module</returns>
+        </member>
+        <member name="M:ClooN.Noise.Step(ClooN.NoiseModule,ClooN.NoiseModule)">
+            <summary>
+            If value is smaller than edge returns 0 else value
+            </summary>
+            <param name="edge">The edge all values equal or below it will result in 0</param>
+            <param name="value">Value to get stepped</param>
+            <returns>If value is smaller than edge returns 0 else value</returns>
+        </member>
+        <member name="T:ClooN.NoiseProgram">
+            <summary>
+            Noise programm to generate noise on gpu
+            </summary>
+        </member>
+        <member name="M:ClooN.NoiseProgram.#ctor(ClooN.NoiseModule)">
+            <summary>
+            Creates a new noise program that uses a noisemodule
+            </summary>
+            <param name="module"></param>
+        </member>
+        <member name="M:ClooN.NoiseProgram.Compile">
+            <summary>
+            Compiles the OpenCL program on the first availble platform
+            </summary>
+        </member>
+        <member name="M:ClooN.NoiseProgram.Compile(Cloo.ComputePlatform)">
+            <summary>
+            Compiles the OpenCL program on the first availble platform
+            </summary>
+            <param name="platform">The platform to run this program on</param>
+        </member>
+        <member name="M:ClooN.NoiseProgram.GetValues(ClooN.Single3[],System.Single[]@)">
+            <summary>
+            Gets the values for an explicit input
+            </summary>
+            <param name="input">The explicit input</param>
+            <param name="output">The output values</param>
+        </member>
+        <member name="M:ClooN.NoiseProgram.GetValues(ClooN.ImplicitCube@,System.Single[]@)">
+            <summary>
+            Gets the values for an implicit input
+            </summary>
+            <param name="input">The implicit input</param>
+            <param name="output">The implicit values</param>
+        </member>
+        <member name="M:ClooN.NoiseProgram.generatePermutation(System.Int32)">
+            <summary>
+            Creates random permutationTable array, random values have no duplicates and are not higher than array length
+            </summary>
+            <param name="seed">initial state for the random generator</param>
+        </member>
+        <member name="M:ClooN.NoiseProgram.Dispose">
+            <summary>
+            Disposes the OpenCL context
+            </summary>
+        </member>
+        <member name="P:ClooN.NoiseProgram.Seed">
+            <summary>
+            Sets the initial state for the random generator.
+            Same seeds will result in the same noise.
+            This behavior is not guaranteed over different versions!
+            </summary>
+        </member>
+        <member name="P:ClooN.NoiseProgram.CompleteSource">
+            <summary>
+            Contains the complete sourcecode that is compiled and processed by the ClDevice
+            </summary>
+        </member>
+        <member name="T:ClooN.Properties.Resources">
+            <summary>
+              Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
+            </summary>
+        </member>
+        <member name="P:ClooN.Properties.Resources.ResourceManager">
+            <summary>
+              Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
+            </summary>
+        </member>
+        <member name="P:ClooN.Properties.Resources.Culture">
+            <summary>
+              Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
+              Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
+            </summary>
+        </member>
+        <member name="P:ClooN.Properties.Resources.noise">
+             <summary>
+               Sucht eine lokalisierte Zeichenfolge, die typedef struct
+            {
+                float x;
+                float y;
+                float z;
+            } Single3;
+            
+            
+            __constant float g[] = {
+            1,1,0, -1,1,0, 1,-1,0, -1,-1,0,
+            1,0,1, -1,0,1, 1,0,-1, -1,0,-1,
+            0,1,1, 0,-1,1, 0,1,-1, 0,-1,-1,
+            1,1,0, 0,-1,1, -1,1,0, 0,-1,-1,
+            };
+            
+            
+            float fade(float t) { return t * t * t * (t * (t * 6 - 15) + 10); }
+            
+            float lerp(float t, float a, float b) { return a + t * (b - a); }
+            
+            float grad(int hash, float x, float y, float z) {
+                int h = hash &amp; 15;  
+                float g1 = g[h * 3];
+                float g2 = g[h * 3 + 1 [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+             </summary>
+        </member>
+        <member name="T:ClooN.Single3">
+            <summary>
+            Stores 3d coordinate 
+            </summary>
+        </member>
+    </members>
+</doc>
