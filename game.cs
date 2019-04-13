@@ -90,14 +90,13 @@ namespace Template
                         }
                     }
             }
+
             // swap buffers
             for (int i = 0; i < pw * ph; i++) second[i] = pattern[i];
 
             //initiate buffers
             pattern_buffer = new OpenCLBuffer<uint>(program, pattern);
-            pattern_buffer.CopyToDevice();
             second_buffer = new OpenCLBuffer<uint>(program, second);
-            second_buffer.CopyToDevice();
 
             //Set Arguments
             empty.SetArgument(0, pattern_buffer);
@@ -115,6 +114,7 @@ namespace Template
             // clear destination pattern
             // for (int i = 0; i < pw * ph; i++) pattern[i] = 0;
             long[] worksize_empty = { pw * ph };
+            pattern_buffer.CopyToDevice();
             empty.Execute(worksize_empty);
             pattern_buffer.CopyFromDevice();
 
@@ -125,6 +125,7 @@ namespace Template
             second_buffer.CopyToDevice();
             process.Execute(worksize_process);
             pattern_buffer.CopyFromDevice();
+            second_buffer.CopyFromDevice();
             /*
             for (uint y = 1; y < h - 1; y++)
             {
@@ -140,10 +141,11 @@ namespace Template
             // swap buffers
             //for (int i = 0; i < pw * ph; i++) second[i] = pattern[i];
             long[] worksize_swap = { pw * ph };
-            second_buffer.CopyToDevice();
             pattern_buffer.CopyToDevice();
+            second_buffer.CopyToDevice();
             swap.Execute(worksize_swap);
             second_buffer.CopyFromDevice();
+            pattern_buffer.CopyFromDevice();
         }
         // TICK
         // Main application entry point: the template calls this function once per frame.
