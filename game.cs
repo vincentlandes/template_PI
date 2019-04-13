@@ -90,7 +90,6 @@ namespace Template
                         }
                     }
             }
-
             // swap buffers
             for (int i = 0; i < pw * ph; i++) second[i] = pattern[i];
 
@@ -111,25 +110,20 @@ namespace Template
         // in array 'pattern'. At the end, the result is copied back to 'second' for the next generation.
         void Simulate()
         {
-            // clear destination pattern
-            // for (int i = 0; i < pw * ph; i++) pattern[i] = 0;
-            long[] worksize_empty = { pw * ph };
-            pattern_buffer.CopyToDevice();
-            empty.Execute(worksize_empty);
-            pattern_buffer.CopyFromDevice();
-
-            // process all pixels, skipping one pixel boundary
-            uint w = pw * 32, h = ph;
-            long[] worksize_process = { w, h };
             pattern_buffer.CopyToDevice();
             second_buffer.CopyToDevice();
+            // clear destination pattern
+            // for (int i = 0; i < pw * ph; i++) pattern[i] = 0;
+            long[] worksize_empty = { pw * ph };            
+            empty.Execute(worksize_empty);
+            // process all pixels, skipping one pixel boundary
+            uint w = (pw * 32) - 1, h = ph - 1;
+            long[] worksize_process = {w, h};            
             process.Execute(worksize_process);
-            pattern_buffer.CopyFromDevice();
-            second_buffer.CopyFromDevice();
             /*
-            for (uint y = 1; y < h - 1; y++)
+            for (uint y = 1; y < h; y++)
             {
-                for (uint x = 1; x < w - 1; x++)
+                for (uint x = 1; x < w; x++)
                 {
                     // count active neighbors
                     uint n = GetBit(x - 1, y - 1) + GetBit(x, y - 1) + GetBit(x + 1, y - 1) + GetBit(x - 1, y) +
@@ -141,11 +135,9 @@ namespace Template
             // swap buffers
             //for (int i = 0; i < pw * ph; i++) second[i] = pattern[i];
             long[] worksize_swap = { pw * ph };
-            pattern_buffer.CopyToDevice();
-            second_buffer.CopyToDevice();
-            swap.Execute(worksize_swap);
-            second_buffer.CopyFromDevice();
+            swap.Execute(worksize_swap);            
             pattern_buffer.CopyFromDevice();
+            second_buffer.CopyFromDevice();
         }
         // TICK
         // Main application entry point: the template calls this function once per frame.
