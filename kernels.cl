@@ -23,11 +23,10 @@ __kernel void process_pixels (__global uint* pattern, __global uint* second, uin
 {
     uint x = get_global_id(0);
 	uint y = get_global_id(1);
-
+	
 	if (x != 0 && y != 0) {
 		uint n = GetBit(x - 1, y - 1, pw, second) + GetBit(x, y - 1, pw, second) + GetBit(x + 1, y - 1, pw, second) + GetBit(x - 1, y, pw, second)
-			   + GetBit(x + 1, y, pw, second) + GetBit(x - 1, y + 1, pw, second) + GetBit(x, y + 1, pw, second) + GetBit(x + 1, y + 1, pw, second);
-	
+			   + GetBit(x + 1, y, pw, second) + GetBit(x - 1, y + 1, pw, second) + GetBit(x, y + 1, pw, second) + GetBit(x + 1, y + 1, pw, second);		
 		if ((GetBit(x, y, pw, second) == 1 && n == 2) || n == 3) {
 			BitSet(x, y, pw, pattern);
 		}
